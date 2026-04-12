@@ -11,8 +11,10 @@ const seedExtraData = async () => {
     console.log("Connected to MongoDB for extra seeding");
 
     const admin = await User.findOne({ role: "admin" });
+    console.log("Found admin:", admin ? admin.email : "NOT FOUND");
+    
     if (!admin) {
-      console.error("Admin user not found, please run seedAdmin.js first");
+      console.error("Admin user not found, please run node seedAdmin.js first");
       process.exit(1);
     }
 
