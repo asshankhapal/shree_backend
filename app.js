@@ -11,11 +11,32 @@ const contactRoutes = require("./routes/contact");
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://www.shreeenterprise.app"
+];
+
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is in whitelist or is a authorized domain
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (!allowed) return false;
+      return origin.startsWith(allowed.replace(/\/$/, ''));
+    }) || 
+    /^http:\/\/localhost:\d+$/.test(origin) ||
+    origin.endsWith(".onrender.com") ||
+    origin.includes("shreeenterprise.app");
+
+    if (isAllowed) {
       callback(null, true);
     } else {
+      console.warn("CORS blocked origin:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
