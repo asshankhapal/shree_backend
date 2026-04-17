@@ -53,7 +53,7 @@ app.use("/api/repairs", repairRoutes);
 app.use("/api/contact", contactRoutes);
 
 app.get("/", (req, res) => {
-  res.json({ message: "Shree Enterprises API is running" });
+  res.json({ message: "Super Computers API is running" });
 });
 
 // Global error handler
