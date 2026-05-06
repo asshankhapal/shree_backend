@@ -68,6 +68,17 @@ router.put("/:id/status", protect, adminProtect, async (req, res) => {
   }
 });
 
+// DELETE /api/repairs/admin/:id - Delete any repair booking (admin only)
+router.delete("/admin/:id", protect, adminProtect, async (req, res) => {
+  try {
+    const booking = await RepairBooking.findByIdAndDelete(req.params.id);
+    if (!booking) return res.status(404).json({ message: "Booking not found" });
+    res.json({ message: "Repair booking deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete booking", error: error.message });
+  }
+});
+
 // DELETE /api/repairs/:id - Delete own repair booking (user)
 router.delete("/:id", protect, async (req, res) => {
   try {
